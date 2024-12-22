@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abid Online Shop</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .welcome {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shop-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .shop-button:hover {
+            background-color: #0056b3;
+        }
+
+        .product-grid {
+            display: none;
+            padding: 20px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .product img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .popup input, .popup select {
+            margin: 10px 0;
+            padding: 5px;
+            width: 90%;
+        }
+
+        .popup-buttons button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .back-button {
+            background-color: black;
+            color: white;
+        }
+
+        .purchase-button {
+            background-color: blue;
+            color: white;
+        }
+
+        .confirm-button {
+            background-color: green;
+            color: white;
+        }
+
+        .no-button {
+            background-color: red;
+            color: white;
+        }
+    </style>
+    <script>
+        function startShopping() {
+            document.querySelector('.welcome').style.display = 'none';
+            document.querySelector('.product-grid').style.display = 'block';
+        }
+
+        function showProductPopup(product) {
+            document.querySelector('#productPopup').style.display = 'block';
+            document.querySelector('#productName').innerText = product;
+        }
+
+        function hidePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        function showPurchaseConfirmation() {
+            hidePopup('productPopup');
+            document.querySelector('#purchasePopup').style.display = 'block';
+        }
+
+        function showOrderForm() {
+            hidePopup('purchasePopup');
+            document.querySelector('#orderFormPopup').style.display = 'block';
+        }
+
+        function confirmOrder() {
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const country = document.getElementById('country').value;
+            const state = document.getElementById('state').value;
+            const date = new Date(document.getElementById('date').value);
+
+            const deliveryDate = new Date(date);
+            deliveryDate.setDate(date.getDate() + 7);
+
+            document.getElementById('confirmationDetails').innerHTML = `
+                <p>Your order has been confirmed!</p>
+                <p>Name: ${name}</p>
+                <p>Address: ${address}</p>
+                <p>Country: ${country}</p>
+                <p>State: ${state}</p>
+                <p>Date: ${date.toDateString()}</p>
+                <p>Delivery Date: ${deliveryDate.toDateString()}</p>
+                <p>Make sure to take a screenshot for proof.</p>
+            `;
+
+            hidePopup('orderFormPopup');
+            document.querySelector('#confirmationPopup').style.display = 'block';
+        }
+
+        function goBackToHome() {
+            hidePopup('confirmationPopup');
+            alert('Thank you for shopping with Abid Online Shop!');
+            document.querySelector('.welcome').style.display = 'flex';
+            document.querySelector('.product-grid').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <div class="welcome">
+        <h1>Welcome to Abid Online Shop</h1>
+        <button class="shop-button" onclick="startShopping()">Shop</button>
+    </div>
+
+    <div class="product-grid">
+        <div class="products">
+            <div class="product" onclick="showProductPopup('White T-Shirt')">
+                <img src="images.jpeg" alt="White T-Shirt">
+                <h2>White T-Shirt</h2>
+                <p>Price: $20</p>
+            </div>
+            <div class="product" onclick="showProductPopup('Black Hoodie')">
+                <img src="download.jpeg" alt="Black Hoodie">
+                <h2>Black Hoodie</h2>
+                <p>Price: $40</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Popup -->
+    <div id="productPopup" class="popup">
+        <h2 id="productName"></h2>
+        <div class="popup-buttons">
+            <button class="back-button" onclick="hidePopup('productPopup')">Back</button>
+            <button class="purchase-button" onclick="showPurchaseConfirmation()">Purchase</button>
+        </div>
+    </div>
+
+    <!-- Purchase Confirmation Popup -->
+    <div id="purchasePopup" class="popup">
+        <p>Are you sure you want to purchase this item?</p>
+        <div class="popup-buttons">
+            <button class="no-button" onclick="goBackToHome()">No</button>
+            <button class="confirm-button" onclick="showOrderForm()">Yes</button>
+        </div>
+    </div>
+
+    <!-- Order Form Popup -->
+    <div id="orderFormPopup" class="popup">
+        <p>Enter your details:</p>
+        <input id="name" type="text" placeholder="Enter Name" required>
+        <input id="address" type="text" placeholder="Enter Address" required>
+        <input id="country" type="text" placeholder="Enter Country" required>
+        <input id="state" type="text" placeholder="Enter State" required>
+        <input id="date" type="date" required>
+        <button class="confirm-button" onclick="confirmOrder()">Confirm</button>
+    </div>
+
+    <!-- Order Confirmation Popup -->
+    <div id="confirmationPopup" class="popup">
+        <div id="confirmationDetails"></div>
+        <button class="back-button" onclick="goBackToHome()">Go Back to Shop</button>
+    </div>
+</body>
+</html>
